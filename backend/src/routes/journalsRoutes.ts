@@ -9,4 +9,8 @@ router.get("/:journalEntryId", JournalsController.getJournalEntry);
 
 router.post("/", JournalsController.createJournalEntry);
 
+router.patch("/:journalEntryId", JournalsController.updateJournalEntry);
+
+router.delete("/:journalEntryId", JournalsController.deleteJournalEntry);
+
 export default router;
