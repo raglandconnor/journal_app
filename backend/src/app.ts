@@ -1,18 +1,15 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import JournalEntryModel from "./models/journalEntry";
+import journalsRoutes from "./routes/journalsRoutes";
+import morgan from "morgan";
 
 const app = express();
 
-app.get("/", async (req, res, next) => {
-    // Use try catch to handle errors
-    try {
-        const journalEntries = await JournalEntryModel.find().exec();
-        res.status(200).json(journalEntries);
-    } catch (error) {
-        next(error);
-    }
-});
+app.use(morgan("dev"));
+
+app.use(express.json());
+
+app.use("/api/journals", journalsRoutes);
 
 app.use((req, res, next) => {
     next(Error("Endpoint not found"));
