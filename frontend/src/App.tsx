@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { JournalEntry } from "./models/journalEntry";
+import { JournalEntryModel } from "./models/journalEntryModel";
+import JournalEntry from "./components/JournalEntry";
 
 function App() {
-    const [journals, setJournals] = useState<JournalEntry[]>([]);
+    const [journals, setJournals] = useState<JournalEntryModel[]>([]);
 
     useEffect(() => {
         async function loadJournals() {
@@ -22,7 +23,18 @@ function App() {
         loadJournals();
     }, []);
 
-    return <p>{JSON.stringify(journals)}</p>;
+    return (
+        <div className="p-6 mt-16">
+            <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
+                {journals.map((journalEntry) => (
+                    <JournalEntry
+                        journalEntry={journalEntry}
+                        key={journalEntry._id}
+                    />
+                ))}
+            </section>
+        </div>
+    );
 }
 
 export default App;
