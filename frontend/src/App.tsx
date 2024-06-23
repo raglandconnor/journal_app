@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { JournalEntryModel } from "./models/journalEntryModel";
 import JournalEntry from "./components/JournalEntry";
+import * as JournalEntriesAPI from "./api/journalEntriesAPI";
 
 function App() {
     const [journals, setJournals] = useState<JournalEntryModel[]>([]);
@@ -8,11 +9,8 @@ function App() {
     useEffect(() => {
         async function loadJournals() {
             try {
-                const res = await fetch("/api/journals", {
-                    method: "GET",
-                });
+                const journalsData = await JournalEntriesAPI.fetchJournals();
 
-                const journalsData = await res.json();
                 setJournals(journalsData);
             } catch (error) {
                 console.error("Error fetching journals:", error);
