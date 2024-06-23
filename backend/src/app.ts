@@ -1,3 +1,4 @@
+const cors = require("cors");
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import journalsRoutes from "./routes/journalsRoutes";
@@ -5,6 +6,12 @@ import morgan from "morgan";
 import createHttpError, { isHttpError } from "http-errors";
 
 const app = express();
+
+app.use(
+    cors({
+        origin: "http://localhost:3500",
+    })
+);
 
 app.use(morgan("dev"));
 
