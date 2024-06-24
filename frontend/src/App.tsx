@@ -18,7 +18,7 @@ function App() {
                 setJournals(journalsData);
             } catch (error) {
                 console.error("Error fetching journals:", error);
-                // alert(error);
+                alert(error);
             }
         }
 
@@ -26,7 +26,7 @@ function App() {
     }, []);
 
     return (
-        <div className="relative p-6 mt-16">
+        <div className="p-6 mt-16">
             {showCreateJournalEntryModal && (
                 <CreateJournalEntryModal
                     isOpen={showCreateJournalEntryModal}
@@ -48,7 +48,7 @@ function App() {
 
             <button
                 onClick={() => setShowCreateJournalEntryModal(true)}
-                className="absolute bottom-[-2.5rem] left-1/2 transform -translate-x-1/2 rounded-full bg-red-400 p-4 cursor-pointer"
+                className="fixed bottom-5 left-1/2 transform -translate-x-1/2 rounded-full bg-red-400 p-4 md:scale-110 cursor-pointer"
             >
                 <TfiPlus className="text-white" />
             </button>

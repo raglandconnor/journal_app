@@ -47,8 +47,8 @@ export const createJournalEntry: RequestHandler<
     const text = req.body.text;
 
     try {
-        if (!title)
-            throw createHttpError(400, "Journal entry title is required");
+        // if (!title)
+        //     throw createHttpError(400, "Journal entry title is required");
 
         const newJournalEntry = await JournalEntryModel.create({
             title,
