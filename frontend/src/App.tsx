@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { JournalEntryModel } from "./models/journalEntryModel";
 import JournalEntry from "./components/JournalEntry";
+import CreateJournalEntryModal from "./components/CreateJournalEntryModal";
 import * as JournalEntriesAPI from "./api/journalEntriesAPI";
+import { TfiPlus } from "react-icons/tfi";
 
 function App() {
     const [journals, setJournals] = useState<JournalEntryModel[]>([]);
+    const [showCreateJournalEntryModal, setShowCreateJournalEntryModal] =
+        useState(false);
 
     useEffect(() => {
         async function loadJournals() {
@@ -14,7 +18,7 @@ function App() {
                 setJournals(journalsData);
             } catch (error) {
                 console.error("Error fetching journals:", error);
-                alert(error);
+                // alert(error);
             }
         }
 
@@ -22,7 +26,17 @@ function App() {
     }, []);
 
     return (
-        <div className="p-6 mt-16">
+        <div className="relative p-6 mt-16">
+            {showCreateJournalEntryModal && (
+                <CreateJournalEntryModal
+                    isOpen={showCreateJournalEntryModal}
+                    setIsOpen={setShowCreateJournalEntryModal}
+                    onSubmitNewJournalEntry={(newJournalEntry) => {
+                        setJournals([...journals, newJournalEntry]);
+                    }}
+                />
+            )}
+
             <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
                 {journals.map((journalEntry) => (
                     <JournalEntry
@@ -31,6 +45,13 @@ function App() {
                     />
                 ))}
             </section>
+
+            <button
+                onClick={() => setShowCreateJournalEntryModal(true)}
+                className="absolute bottom-[-2.5rem] left-1/2 transform -translate-x-1/2 rounded-full bg-red-400 p-4 cursor-pointer"
+            >
+                <TfiPlus className="text-white" />
+            </button>
         </div>
     );
 }
