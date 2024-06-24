@@ -2,10 +2,16 @@ import { JournalEntryModel } from "../models/journalEntryModel";
 import { formatDate } from "../utils/formatDate";
 
 interface JournalEntryProps {
+    onClick: (journalEntryId: string, journalEntry: JournalEntryModel) => void;
     journalEntry: JournalEntryModel;
+    journalEntryId: string;
 }
 
-function JournalEntry({ journalEntry }: JournalEntryProps) {
+function JournalEntry({
+    journalEntry,
+    onClick,
+    journalEntryId,
+}: JournalEntryProps) {
     const { title, text, updatedAt, createdAt } = journalEntry;
 
     let dateString;
@@ -23,6 +29,7 @@ function JournalEntry({ journalEntry }: JournalEntryProps) {
         <div className="border-gray-200 whitespace-pre-line">
             <a
                 href="#"
+                onClick={() => onClick(journalEntryId, journalEntry)}
                 className="md:h-72 lg:h-96 flex flex-col p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
                 <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">

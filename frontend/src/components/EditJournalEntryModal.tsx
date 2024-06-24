@@ -9,19 +9,27 @@ import { JournalEntryModel } from "../models/journalEntryModel";
 import { JournalEntryInput } from "../api/journalEntriesAPI";
 import * as JournalEntriesAPI from "../api/journalEntriesAPI";
 
-interface createJournalEntryModalProps {
+interface editJournalEntryModalProps {
+    journalEntry: JournalEntryModel;
     isOpen: boolean;
     setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onSubmitNewJournalEntry: (journalEntry: JournalEntryModel) => void;
+    editingId: string;
+    setEditingId: React.Dispatch<React.SetStateAction<string>>;
+    onSubmitEditedJournalEntry: (journalEntry: JournalEntryModel) => void;
+    onDeleteJournalEntry: (deletedJournalEntryId: string) => void;
 }
 
-function CreateJournalEntryModal({
+function EditJournalEntryModal({
+    journalEntry,
     isOpen,
     setIsOpen,
-    onSubmitNewJournalEntry,
-}: createJournalEntryModalProps) {
-    const [newTitle, setNewTitle] = useState("");
-    const [newText, setNewText] = useState("");
+    editingId,
+    setEditingId,
+    onSubmitEditedJournalEntry,
+    onDeleteJournalEntry,
+}: editJournalEntryModalProps) {
+    const [newTitle, setNewTitle] = useState(journalEntry.title);
+    const [newText, setNewText] = useState(journalEntry.text);
 
     const handleFormChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,14 +45,16 @@ function CreateJournalEntryModal({
 
     const handleSubmit = async () => {
         try {
-            const newJournalEntryInput: JournalEntryInput = {
+            const editedJournalEntryInput: JournalEntryInput = {
                 title: newTitle,
                 text: newText,
             };
-            const journalRes = await JournalEntriesAPI.createJournal(
-                newJournalEntryInput
+            const journalRes = await JournalEntriesAPI.updateJournalEntry(
+                editingId,
+                editedJournalEntryInput
             );
-            onSubmitNewJournalEntry(journalRes);
+            onSubmitEditedJournalEntry(journalRes);
+            setEditingId("");
             setIsOpen(false);
         } catch (error) {
             console.error(error);
@@ -88,7 +98,7 @@ function CreateJournalEntryModal({
                                             name="text"
                                             placeholder="Start writing..."
                                             value={newText}
-                                            className="w-full block border rounded-md h-32 pl-2"
+                                            className="w-full block border rounded-md h-48 md:h-96 pl-2"
                                             onChange={handleFormChange}
                                         />
                                     </div>
@@ -101,12 +111,22 @@ function CreateJournalEntryModal({
                                 className="inline-flex w-full justify-center rounded-md bg-gray-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-500 sm:ml-3 sm:w-auto"
                                 onClick={handleSubmit}
                             >
-                                Create
+                                Confirm Changes
+                            </button>
+                            <button
+                                type="button"
+                                className="mt-3 md:mt-0 inline-flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
+                                onClick={() => onDeleteJournalEntry(editingId)}
+                            >
+                                Delete Note
                             </button>
                             <button
                                 type="button"
                                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto"
-                                onClick={() => setIsOpen(false)}
+                                onClick={() => {
+                                    setIsOpen(false);
+                                    setEditingId("");
+                                }}
                                 data-autofocus
                             >
                                 Cancel
@@ -119,4 +139,4 @@ function CreateJournalEntryModal({
     );
 }
 
-export default CreateJournalEntryModal;
+export default EditJournalEntryModal;

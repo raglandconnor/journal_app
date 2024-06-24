@@ -4,11 +4,17 @@ import JournalEntry from "./components/JournalEntry";
 import CreateJournalEntryModal from "./components/CreateJournalEntryModal";
 import * as JournalEntriesAPI from "./api/journalEntriesAPI";
 import { TfiPlus } from "react-icons/tfi";
+import EditJournalEntryModal from "./components/EditJournalEntryModal";
 
 function App() {
     const [journals, setJournals] = useState<JournalEntryModel[]>([]);
     const [showCreateJournalEntryModal, setShowCreateJournalEntryModal] =
         useState(false);
+    const [showEditJournalEntryModal, setShowEditJournalEntryModal] =
+        useState(true);
+    const [editingId, setEditingId] = useState<string>("");
+    const [editingJournalEntry, setEditingJournalEntry] =
+        useState<JournalEntryModel | null>(null);
 
     useEffect(() => {
         async function loadJournals() {
@@ -25,8 +31,56 @@ function App() {
         loadJournals();
     }, []);
 
+    async function deleteJournalEntry(deletedId: string) {
+        try {
+            await JournalEntriesAPI.deleteJournal(deletedId);
+            setJournals(
+                journals.filter(
+                    (existingJournal) => existingJournal._id !== deletedId
+                )
+            );
+            setEditingId("");
+        } catch (error) {
+            console.error(error);
+            alert(error);
+        }
+    }
+
+    const onJournalEntryClick = (
+        journalEntryId: string,
+        journalEntry: JournalEntryModel
+    ) => {
+        setEditingId(journalEntryId);
+        setShowEditJournalEntryModal(true);
+        setEditingJournalEntry(journalEntry);
+    };
+
     return (
         <div className="p-6 mt-16">
+            {showEditJournalEntryModal && editingId && editingJournalEntry && (
+                <EditJournalEntryModal
+                    journalEntry={editingJournalEntry}
+                    isOpen={showEditJournalEntryModal}
+                    setIsOpen={setShowEditJournalEntryModal}
+                    editingId={editingId}
+                    setEditingId={setEditingId}
+                    onSubmitEditedJournalEntry={(editedJournalEntry) => {
+                        setJournals(
+                            journals.map((prevJournalEntry) => {
+                                if (
+                                    prevJournalEntry._id ===
+                                    editedJournalEntry._id
+                                ) {
+                                    return editedJournalEntry;
+                                } else {
+                                    return prevJournalEntry;
+                                }
+                            })
+                        );
+                    }}
+                    onDeleteJournalEntry={deleteJournalEntry}
+                />
+            )}
             {showCreateJournalEntryModal && (
                 <CreateJournalEntryModal
                     isOpen={showCreateJournalEntryModal}
@@ -42,6 +96,8 @@ function App() {
                     <JournalEntry
                         journalEntry={journalEntry}
                         key={journalEntry._id}
+                        journalEntryId={journalEntry._id}
+                        onClick={onJournalEntryClick}
                     />
                 ))}
             </section>
