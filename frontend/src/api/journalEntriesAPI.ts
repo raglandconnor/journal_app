@@ -1,16 +1,5 @@
 import { JournalEntryModel } from "../models/journalEntryModel";
-
-async function fetchData(input: RequestInfo, init?: RequestInit) {
-    const res = await fetch(input, init);
-
-    if (res.ok) {
-        return res;
-    } else {
-        const errorBody = await res.json();
-        const errorMsg = errorBody.message;
-        throw Error(errorMsg);
-    }
-}
+import fetchData from "../utils/fetchData";
 
 export async function fetchJournals(): Promise<JournalEntryModel[]> {
     const res = await fetchData("/api/journals", {
