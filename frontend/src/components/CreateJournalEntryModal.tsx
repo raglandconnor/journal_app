@@ -88,7 +88,7 @@ function CreateJournalEntryModal({
                                             name="text"
                                             placeholder="Start writing..."
                                             value={newText}
-                                            className="w-full block border rounded-md h-32 pl-2"
+                                            className="w-full block border rounded-md h-32 md:h-96 pl-2"
                                             onChange={handleFormChange}
                                         />
                                     </div>

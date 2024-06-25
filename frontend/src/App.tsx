@@ -5,6 +5,7 @@ import CreateJournalEntryModal from "./components/CreateJournalEntryModal";
 import * as JournalEntriesAPI from "./api/journalEntriesAPI";
 import { TfiPlus } from "react-icons/tfi";
 import EditJournalEntryModal from "./components/EditJournalEntryModal";
+import { ThreeDots } from "react-loader-spinner";
 
 function App() {
     const [journals, setJournals] = useState<JournalEntryModel[]>([]);
@@ -15,16 +16,23 @@ function App() {
     const [editingId, setEditingId] = useState<string>("");
     const [editingJournalEntry, setEditingJournalEntry] =
         useState<JournalEntryModel | null>(null);
+    const [loadingJournal, setLoadingJournal] = useState(false);
+    const [loadingJournalsError, setLoadingJournalsError] = useState(false);
 
     useEffect(() => {
         async function loadJournals() {
             try {
+                setLoadingJournalsError(false);
+                setLoadingJournal(true);
+
                 const journalsData = await JournalEntriesAPI.fetchJournals();
 
                 setJournals(journalsData);
             } catch (error) {
                 console.error("Error fetching journals:", error);
-                alert(error);
+                setLoadingJournalsError(true);
+            } finally {
+                setLoadingJournal(false);
             }
         }
 
@@ -54,6 +62,19 @@ function App() {
         setShowEditJournalEntryModal(true);
         setEditingJournalEntry(journalEntry);
     };
+
+    const journalsElements = (
+        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
+            {journals.map((journalEntry) => (
+                <JournalEntry
+                    journalEntry={journalEntry}
+                    key={journalEntry._id}
+                    journalEntryId={journalEntry._id}
+                    onClick={onJournalEntryClick}
+                />
+            ))}
+        </section>
+    );
 
     return (
         <div className="p-6 mt-16">
@@ -91,22 +112,38 @@ function App() {
                 />
             )}
 
-            <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
-                {journals.map((journalEntry) => (
-                    <JournalEntry
-                        journalEntry={journalEntry}
-                        key={journalEntry._id}
-                        journalEntryId={journalEntry._id}
-                        onClick={onJournalEntryClick}
-                    />
-                ))}
-            </section>
+            {loadingJournal && (
+                <ThreeDots
+                    visible={true}
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color="gray"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="w-full flex items-center justify-center"
+                />
+            )}
+            {loadingJournalsError && (
+                <p className="text-center">
+                    Something went wrong. Please refresh the page
+                </p>
+            )}
+            {!loadingJournal && !loadingJournalsError && (
+                <>
+                    {journals.length > 0 ? (
+                        journalsElements
+                    ) : (
+                        <p className="text-center">Start writing...</p>
+                    )}
+                </>
+            )}
 
             <button
                 onClick={() => setShowCreateJournalEntryModal(true)}
                 className="fixed bottom-5 left-1/2 transform -translate-x-1/2 rounded-full bg-red-400 p-4 md:scale-110 cursor-pointer"
             >
-                <TfiPlus className="text-white" />
+                <TfiPlus className="text-white scale-105" />
             </button>
         </div>
     );
