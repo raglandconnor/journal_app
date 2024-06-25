@@ -1,150 +1,41 @@
-import { useEffect, useState } from "react";
-import { JournalEntryModel } from "./models/journalEntryModel";
-import JournalEntry from "./components/JournalEntry";
-import CreateJournalEntryModal from "./components/CreateJournalEntryModal";
-import * as JournalEntriesAPI from "./api/journalEntriesAPI";
-import { TfiPlus } from "react-icons/tfi";
-import EditJournalEntryModal from "./components/EditJournalEntryModal";
-import { ThreeDots } from "react-loader-spinner";
+import {
+    createBrowserRouter,
+    Navigate,
+    RouterProvider,
+} from "react-router-dom";
+
+import LoginPage from "./pages/LoginPage";
+import NotFound from "./pages/NotFound";
+import JournalsRoot from "./pages/JournalsRoot";
+import SignUpPage from "./pages/SignUpPage";
+
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Navigate to="/signup" replace />,
+        errorElement: <NotFound />,
+    },
+    {
+        path: "/signup",
+        element: <SignUpPage />,
+        errorElement: <NotFound />,
+    },
+    {
+        path: "/login",
+        element: <LoginPage />,
+        errorElement: <NotFound />,
+    },
+    {
+        path: "/journals",
+        element: <JournalsRoot />,
+        errorElement: <NotFound />,
+    },
+]);
 
 function App() {
-    const [journals, setJournals] = useState<JournalEntryModel[]>([]);
-    const [showCreateJournalEntryModal, setShowCreateJournalEntryModal] =
-        useState(false);
-    const [showEditJournalEntryModal, setShowEditJournalEntryModal] =
-        useState(true);
-    const [editingId, setEditingId] = useState<string>("");
-    const [editingJournalEntry, setEditingJournalEntry] =
-        useState<JournalEntryModel | null>(null);
-    const [loadingJournal, setLoadingJournal] = useState(false);
-    const [loadingJournalsError, setLoadingJournalsError] = useState(false);
-
-    useEffect(() => {
-        async function loadJournals() {
-            try {
-                setLoadingJournalsError(false);
-                setLoadingJournal(true);
-
-                const journalsData = await JournalEntriesAPI.fetchJournals();
-
-                setJournals(journalsData);
-            } catch (error) {
-                console.error("Error fetching journals:", error);
-                setLoadingJournalsError(true);
-            } finally {
-                setLoadingJournal(false);
-            }
-        }
-
-        loadJournals();
-    }, []);
-
-    async function deleteJournalEntry(deletedId: string) {
-        try {
-            await JournalEntriesAPI.deleteJournal(deletedId);
-            setJournals(
-                journals.filter(
-                    (existingJournal) => existingJournal._id !== deletedId
-                )
-            );
-            setEditingId("");
-        } catch (error) {
-            console.error(error);
-            alert(error);
-        }
-    }
-
-    const onJournalEntryClick = (
-        journalEntryId: string,
-        journalEntry: JournalEntryModel
-    ) => {
-        setEditingId(journalEntryId);
-        setShowEditJournalEntryModal(true);
-        setEditingJournalEntry(journalEntry);
-    };
-
-    const journalsElements = (
-        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
-            {journals.map((journalEntry) => (
-                <JournalEntry
-                    journalEntry={journalEntry}
-                    key={journalEntry._id}
-                    journalEntryId={journalEntry._id}
-                    onClick={onJournalEntryClick}
-                />
-            ))}
-        </section>
-    );
-
     return (
-        <div className="p-6 mt-16">
-            {showEditJournalEntryModal && editingId && editingJournalEntry && (
-                <EditJournalEntryModal
-                    journalEntry={editingJournalEntry}
-                    isOpen={showEditJournalEntryModal}
-                    setIsOpen={setShowEditJournalEntryModal}
-                    editingId={editingId}
-                    setEditingId={setEditingId}
-                    onSubmitEditedJournalEntry={(editedJournalEntry) => {
-                        setJournals(
-                            journals.map((prevJournalEntry) => {
-                                if (
-                                    prevJournalEntry._id ===
-                                    editedJournalEntry._id
-                                ) {
-                                    return editedJournalEntry;
-                                } else {
-                                    return prevJournalEntry;
-                                }
-                            })
-                        );
-                    }}
-                    onDeleteJournalEntry={deleteJournalEntry}
-                />
-            )}
-            {showCreateJournalEntryModal && (
-                <CreateJournalEntryModal
-                    isOpen={showCreateJournalEntryModal}
-                    setIsOpen={setShowCreateJournalEntryModal}
-                    onSubmitNewJournalEntry={(newJournalEntry) => {
-                        setJournals([...journals, newJournalEntry]);
-                    }}
-                />
-            )}
-
-            {loadingJournal && (
-                <ThreeDots
-                    visible={true}
-                    height="80"
-                    width="80"
-                    radius="9"
-                    color="gray"
-                    ariaLabel="three-dots-loading"
-                    wrapperStyle={{}}
-                    wrapperClass="w-full flex items-center justify-center"
-                />
-            )}
-            {loadingJournalsError && (
-                <p className="text-center">
-                    Something went wrong. Please refresh the page
-                </p>
-            )}
-            {!loadingJournal && !loadingJournalsError && (
-                <>
-                    {journals.length > 0 ? (
-                        journalsElements
-                    ) : (
-                        <p className="text-center">Start writing...</p>
-                    )}
-                </>
-            )}
-
-            <button
-                onClick={() => setShowCreateJournalEntryModal(true)}
-                className="fixed bottom-5 left-1/2 transform -translate-x-1/2 rounded-full bg-red-400 p-4 md:scale-110 cursor-pointer"
-            >
-                <TfiPlus className="text-white scale-105" />
-            </button>
+        <div>
+            <RouterProvider router={router} />
         </div>
     );
 }
