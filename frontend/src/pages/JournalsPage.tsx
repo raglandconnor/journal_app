@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { JournalEntryModel } from "../models/journalEntryModel";
-import JournalEntry from "../components/JournalEntry";
-import CreateJournalEntryModal from "../components/CreateJournalEntryModal";
-import * as JournalEntriesAPI from "../api/journalEntriesAPI";
 import { TfiPlus } from "react-icons/tfi";
-import EditJournalEntryModal from "../components/EditJournalEntryModal";
 import { ThreeDots } from "react-loader-spinner";
+import * as JournalEntriesAPI from "../api/journalEntriesAPI";
+import CreateJournalEntryModal from "../components/CreateJournalEntryModal";
+import EditJournalEntryModal from "../components/EditJournalEntryModal";
+import JournalEntry from "../components/JournalEntry";
+import { JournalEntryModel } from "../models/journalEntryModel";
 
 function JournalsPage() {
     const [journals, setJournals] = useState<JournalEntryModel[]>([]);
