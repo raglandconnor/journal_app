@@ -149,7 +149,9 @@ function JournalsPage() {
                     {journals.length > 0 ? (
                         journalsElements
                     ) : (
-                        <p className="text-center">Start writing...</p>
+                        <p className="text-center text-gray-500">
+                            Start writing...
+                        </p>
                     )}
                 </>
             )}

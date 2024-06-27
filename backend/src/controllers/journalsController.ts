@@ -2,11 +2,17 @@ import { RequestHandler } from "express";
 import JournalEntryModel from "../models/journalEntry";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
+import { assertIsDefined } from "../util/assertIsDefined";
 
 export const getJournalEntries: RequestHandler = async (req, res, next) => {
-    // Use try catch to handle errors
+    const authenticatedUserId = req.session.userId;
+
     try {
-        const journalEntries = await JournalEntryModel.find().exec();
+        assertIsDefined(authenticatedUserId);
+
+        const journalEntries = await JournalEntryModel.find({
+            userId: authenticatedUserId,
+        }).exec();
         res.status(200).json(journalEntries);
     } catch (error) {
         next(error);
@@ -15,7 +21,11 @@ export const getJournalEntries: RequestHandler = async (req, res, next) => {
 
 export const getJournalEntry: RequestHandler = async (req, res, next) => {
     const journalEntryId = req.params.journalEntryId;
+    const authenticatedUserId = req.session.userId;
+
     try {
+        assertIsDefined(authenticatedUserId);
+
         if (!mongoose.isValidObjectId(journalEntryId))
             throw createHttpError(400, "Invalid journal entry ID");
 
@@ -25,6 +35,10 @@ export const getJournalEntry: RequestHandler = async (req, res, next) => {
 
         if (!journalEntry)
             throw createHttpError(404, "Journal entry not found");
+
+        if (!journalEntry.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this journal entry.");
+        }
 
         res.status(200).json(journalEntry);
     } catch (error) {
@@ -45,12 +59,13 @@ export const createJournalEntry: RequestHandler<
 > = async (req, res, next) => {
     const title = req.body.title;
     const text = req.body.text;
+    const authenticatedUserId = req.session.userId;
 
     try {
-        // if (!title)
-        //     throw createHttpError(400, "Journal entry title is required");
+        assertIsDefined(authenticatedUserId);
 
         const newJournalEntry = await JournalEntryModel.create({
+            userId: authenticatedUserId,
             title,
             text,
         });
@@ -79,8 +94,11 @@ export const updateJournalEntry: RequestHandler<
     const journalEntryId = req.params.journalEntryId;
     const newTitle = req.body.title;
     const newText = req.body.text;
+    const authenticatedUserId = req.session.userId;
 
     try {
+        assertIsDefined(authenticatedUserId);
+
         if (!mongoose.isValidObjectId(journalEntryId))
             throw createHttpError(400, "Invalid journal entry ID");
 
@@ -93,6 +111,10 @@ export const updateJournalEntry: RequestHandler<
 
         if (!journalEntry)
             throw createHttpError(404, "Journal entry not found");
+
+        if (!journalEntry.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this note.");
+        }
 
         journalEntry.title = newTitle;
         journalEntry.text = newText;
@@ -107,8 +129,11 @@ export const updateJournalEntry: RequestHandler<
 
 export const deleteJournalEntry: RequestHandler = async (req, res, next) => {
     const journalEntryId = req.params.journalEntryId;
+    const authenticatedUserId = req.session.userId;
 
     try {
+        assertIsDefined(authenticatedUserId);
+
         if (!mongoose.isValidObjectId(journalEntryId))
             throw createHttpError(400, "Invalid journal entry ID");
 
@@ -118,6 +143,10 @@ export const deleteJournalEntry: RequestHandler = async (req, res, next) => {
 
         if (!journalEntry)
             throw createHttpError(404, "Journal entry not found");
+
+        if (!journalEntry.userId.equals(authenticatedUserId)) {
+            throw createHttpError(401, "You cannot access this note.");
+        }
 
         await journalEntry.deleteOne();
 
