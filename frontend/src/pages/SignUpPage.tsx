@@ -2,12 +2,14 @@ import { useState } from "react";
 import { SignUpCredentials } from "../api/userAPI";
 import * as UserAPI from "../api/userAPI";
 import { Link, useNavigate } from "react-router-dom";
+import { ConflictErr, MissingParamsErr } from "../errors/http_errors";
 
 function SignUpPage() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errText, setErrText] = useState<String | null>(null);
 
     const navigate = useNavigate();
 
@@ -27,8 +29,15 @@ function SignUpPage() {
             const newUser = await UserAPI.signUp(credentials);
             signUpSuccessful();
         } catch (error) {
-            console.log(error);
-            alert(error);
+            if (
+                error instanceof ConflictErr ||
+                error instanceof MissingParamsErr
+            ) {
+                setErrText(error.message);
+            } else {
+                console.log(error);
+                alert(error);
+            }
         } finally {
             setIsSubmitting(false);
         }
@@ -80,6 +89,10 @@ function SignUpPage() {
                     onChange={handleChange}
                     className="mt-2 p-1 block border rounded pl-2"
                 />
+
+                {errText && (
+                    <p className="text-red-500 text-[0.9rem]">{errText}</p>
+                )}
 
                 <button
                     onClick={onSubmit}

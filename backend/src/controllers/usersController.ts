@@ -32,7 +32,7 @@ export const userSignUp: RequestHandler<
 
     try {
         if (!username || !email || !rawPassword)
-            throw createHttpError(400, "Missing parameters");
+            throw createHttpError(400, "Missing parameters.");
 
         const existingUsername = await UserModel.findOne({
             username: username,
@@ -42,11 +42,7 @@ export const userSignUp: RequestHandler<
         const existingEmail = await UserModel.findOne({
             email: email,
         }).exec();
-        if (existingEmail)
-            throw createHttpError(
-                409,
-                "A user with this email address already exists. "
-            );
+        if (existingEmail) throw createHttpError(409, "Email address taken.");
 
         const hashedPassword = await bcrypt.hash(rawPassword, 10);
         const newUser = await UserModel.create({
@@ -84,11 +80,11 @@ export const userLogin: RequestHandler<
             .select("+password +email")
             .exec();
 
-        if (!user) throw createHttpError(401, "Invalid credentials");
+        if (!user) throw createHttpError(401, "Invalid credentials.");
 
         const passwordsMatch = await bcrypt.compare(password, user.password);
 
-        if (!passwordsMatch) throw createHttpError(401, "Invalid credentials");
+        if (!passwordsMatch) throw createHttpError(401, "Invalid credentials.");
 
         req.session.userId = user._id;
         res.status(201).json(user);
