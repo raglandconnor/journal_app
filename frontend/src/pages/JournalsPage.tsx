@@ -76,7 +76,7 @@ function JournalsPage() {
     };
 
     const journalsElements = (
-        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 ">
+        <section className="grid md:grid-cols-2 xl:grid-cols-3 gap-3 md:px-12 lg:px-16 xl:px-24 2xl:px-32">
             {journals.map((journalEntry) => (
                 <JournalEntry
                     journalEntry={journalEntry}
