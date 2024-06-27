@@ -56,8 +56,8 @@ function SignUpPage() {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen">
-            <section className="grid px-8 py-12 shadow-lg">
+        <div className="flex items-center justify-center h-screen px-6">
+            <section className="grid px-8 py-12 shadow-lg w-full md:w-[400px]">
                 <h1 className="text-2xl font-semibold">Sign Up</h1>
                 <p className="text-sm">
                     Already have an account?{" "}

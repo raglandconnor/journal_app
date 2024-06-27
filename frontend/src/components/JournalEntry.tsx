@@ -30,7 +30,7 @@ function JournalEntry({
             <a
                 href="#"
                 onClick={() => onClick(journalEntryId, journalEntry)}
-                className="md:h-72 lg:h-96 flex flex-col p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
+                className="h-full md:max-h-72 lg:max-h-96 flex flex-col p-4 bg-white border border-gray-200 rounded-lg shadow hover:shadow-lg hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
             >
                 <h5 className="mb-2 text-2xl font-semibold tracking-tight text-gray-900 dark:text-white">
                     {title}

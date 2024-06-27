@@ -52,8 +52,8 @@ function LoginPage() {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen">
-            <section className="grid px-8 py-12 shadow-lg">
+        <div className="flex items-center justify-center h-screen px-6">
+            <section className="grid px-8 py-12 shadow-lg w-full md:w-[400px]">
                 <h1 className="text-2xl font-semibold">Log In</h1>
                 <p className="text-sm">
                     Don't have an account?{" "}
@@ -79,9 +79,7 @@ function LoginPage() {
                 />
 
                 {errText && (
-                    <p className="text-red-500 text-[0.9rem] w-[270px] break-before-auto`">
-                        {errText}
-                    </p>
+                    <p className="text-red-500 text-[0.9rem]">{errText}</p>
                 )}
 
                 <button
