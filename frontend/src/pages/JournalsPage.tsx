@@ -140,7 +140,7 @@ function JournalsPage() {
                 />
             )}
             {loadingJournalsError && (
-                <p className="text-center">
+                <p className="text-center text-gray-500">
                     Something went wrong. Please refresh the page
                 </p>
             )}

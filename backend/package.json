@@ -31,6 +31,7 @@
         "http-errors": "^2.0.0",
         "mongodb": "^6.7.0",
         "mongoose": "^8.4.3",
+        "mongoose-encryption": "^2.1.2",
         "morgan": "^1.10.0"
     }
 }
