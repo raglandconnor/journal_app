@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { LoginCredentials } from "../api/userAPI";
 import { Link, useNavigate } from "react-router-dom";
 import * as UserAPI from "../api/userAPI";
@@ -11,10 +11,16 @@ function LoginPage() {
     const [errText, setErrText] = useState<String | null>(null);
 
     const navigate = useNavigate();
-
     const onLoginSuccessful = (): void => {
         navigate("/journals");
     };
+    const usernameInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (usernameInputRef.current) {
+            usernameInputRef.current.focus();
+        }
+    }, []);
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -71,6 +77,7 @@ function LoginPage() {
                         placeholder="Username"
                         onChange={handleChange}
                         className="mt-2 p-1 block border rounded pl-2 w-full"
+                        ref={usernameInputRef}
                         required
                     />
                     <input

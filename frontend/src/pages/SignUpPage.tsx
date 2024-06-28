@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SignUpCredentials } from "../api/userAPI";
 import * as UserAPI from "../api/userAPI";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,10 +12,16 @@ function SignUpPage() {
     const [errText, setErrText] = useState<String | null>(null);
 
     const navigate = useNavigate();
-
     const signUpSuccessful = (): void => {
         navigate("/journals");
     };
+    const usernameInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (usernameInputRef.current) {
+            usernameInputRef.current.focus();
+        }
+    }, []);
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -75,6 +81,7 @@ function SignUpPage() {
                         placeholder="Username"
                         onChange={handleChange}
                         className="mt-2 p-1 block border rounded pl-2 w-full"
+                        ref={usernameInputRef}
                         required
                     />
                     <input

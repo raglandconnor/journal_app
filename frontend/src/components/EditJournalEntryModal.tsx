@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
     Dialog,
     DialogBackdrop,
@@ -30,6 +30,14 @@ function EditJournalEntryModal({
 }: editJournalEntryModalProps) {
     const [newTitle, setNewTitle] = useState(journalEntry.title);
     const [newText, setNewText] = useState(journalEntry.text);
+
+    const titleInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (titleInputRef.current) {
+            titleInputRef.current.focus();
+        }
+    }, []);
 
     const handleFormChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -88,6 +96,7 @@ function EditJournalEntryModal({
                                             type="text"
                                             placeholder="Title"
                                             value={newTitle}
+                                            ref={titleInputRef}
                                             className="border rounded-md w-full pl-2"
                                             onChange={handleFormChange}
                                         />
