@@ -17,7 +17,9 @@ function SignUpPage() {
         navigate("/journals");
     };
 
-    async function onSubmit() {
+    async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+
         const credentials: SignUpCredentials = {
             username,
             email,
@@ -65,42 +67,47 @@ function SignUpPage() {
                         Log in
                     </Link>
                 </p>
-                <input
-                    type="text"
-                    name="username"
-                    value={username}
-                    placeholder="Username"
-                    onChange={handleChange}
-                    className="mt-2 p-1 block border rounded pl-2"
-                />
-                <input
-                    type="email"
-                    name="email"
-                    value={email}
-                    placeholder="Email"
-                    onChange={handleChange}
-                    className="mt-2 p-1 block border rounded pl-2"
-                />
-                <input
-                    type="password"
-                    name="password"
-                    value={password}
-                    placeholder="Password"
-                    onChange={handleChange}
-                    className="mt-2 p-1 block border rounded pl-2"
-                />
+                <form onSubmit={onSubmit} className="w-full">
+                    <input
+                        type="text"
+                        name="username"
+                        value={username}
+                        placeholder="Username"
+                        onChange={handleChange}
+                        className="mt-2 p-1 block border rounded pl-2 w-full"
+                        required
+                    />
+                    <input
+                        type="email"
+                        name="email"
+                        value={email}
+                        placeholder="Email"
+                        onChange={handleChange}
+                        className="mt-2 p-1 block border rounded pl-2 w-full"
+                        required
+                    />
+                    <input
+                        type="password"
+                        name="password"
+                        value={password}
+                        placeholder="Password"
+                        onChange={handleChange}
+                        className="mt-2 p-1 block border rounded pl-2 w-full"
+                        required
+                    />
 
-                {errText && (
-                    <p className="text-red-500 text-[0.9rem]">{errText}</p>
-                )}
+                    {errText && (
+                        <p className="text-red-500 text-[0.9rem]">{errText}</p>
+                    )}
 
-                <button
-                    onClick={onSubmit}
-                    disabled={isSubmitting}
-                    className="mt-8 bg-blue-500 px-3 py-[4px] rounded hover:bg-blue-600"
-                >
-                    Sign Up
-                </button>
+                    <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="mt-8 bg-blue-500 px-3 py-[4px] rounded hover:bg-blue-600 w-full"
+                    >
+                        Sign Up
+                    </button>
+                </form>
             </section>
         </div>
     );
