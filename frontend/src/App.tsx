@@ -13,12 +13,14 @@ import { UserModel } from "./models/userModel";
 
 let user: UserModel | null = null;
 
-try {
-    const fetchedUser = await UserAPI.getLoggedInUser();
-    user = fetchedUser;
-} catch (error) {
-    console.error(error);
-}
+(async () => {
+    try {
+        const fetchedUser = await UserAPI.getLoggedInUser();
+        user = fetchedUser;
+    } catch (error) {
+        console.error(error);
+    }
+})();
 
 const router = createBrowserRouter([
     {
