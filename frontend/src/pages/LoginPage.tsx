@@ -33,7 +33,9 @@ function LoginPage() {
         try {
             setIsSubmitting(true);
             const userLoggingIn = await UserAPI.logIn(credentials);
-            onLoginSuccessful();
+            if (userLoggingIn) {
+                onLoginSuccessful();
+            }
         } catch (error) {
             if (
                 error instanceof UnauthorizedErr ||

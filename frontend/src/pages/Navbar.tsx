@@ -1,7 +1,5 @@
 import {
     Disclosure,
-    DisclosureButton,
-    DisclosurePanel,
     Menu,
     MenuButton,
     MenuItem,
@@ -10,14 +8,6 @@ import {
 import * as UserAPI from "../api/userAPI";
 import { useNavigate } from "react-router-dom";
 import { UserModel } from "../models/userModel";
-import { CiUser } from "react-icons/ci";
-
-const navigation = [
-    // { name: "Dashboard", href: "#", current: true },
-    // { name: "Team", href: "#", current: false },
-    // { name: "Projects", href: "#", current: false },
-    // { name: "Calendar", href: "#", current: false },
-];
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(" ");

@@ -35,7 +35,10 @@ function SignUpPage() {
         try {
             setIsSubmitting(true);
             const newUser = await UserAPI.signUp(credentials);
-            signUpSuccessful();
+
+            if (newUser) {
+                signUpSuccessful();
+            }
         } catch (error) {
             if (
                 error instanceof ConflictErr ||
