@@ -127,7 +127,7 @@ function EditJournalEntryModal({
                                 className="mt-3 md:mt-0 inline-flex w-full justify-center rounded-md bg-red-400 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 sm:ml-3 sm:w-auto"
                                 onClick={() => onDeleteJournalEntry(editingId)}
                             >
-                                Delete Note
+                                Delete
                             </button>
                             <button
                                 type="button"
