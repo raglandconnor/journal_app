@@ -1,6 +1,6 @@
 # Journal App
 
-### [In depth overview of the project here](https://www.raglandconnor.com/projects/journal-app)
+### [In depth overview of the project here](https://old.raglandconnor.com/projects/journal-app)
 
 ## Features
 
